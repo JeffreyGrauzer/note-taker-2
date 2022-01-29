@@ -1,3 +1,8 @@
+const express = require('express');
+
+
+//app.use(require('./apiRoutes'));
+//app.use(require('./htmlRoutes'));
 let noteTitle;
 let noteText;
 let saveNoteBtn;
@@ -181,3 +186,5 @@ if (window.location.pathname === '/notes') {
 }
 
 getAndRenderNotes();
+
+module.exports = router;
