@@ -1,35 +1,30 @@
-//create routes that use data create routes for actual notes
-//const express = require('express');
-//const router = express.Router();
+const router = require('express').Router();
+const store = require('../db/store');
 
-const fs = require('fs');
-const db = require('../../db/db.json');
-
-module.exports = (app) => {
-    app.get('/api/notes', (req, res) => {
-        res.json(db);
-     });
-
-    app.post('/api/notes', (req, res) => {
-        let newNote = req.body;
-        notes.push(newNote);
-    });
-    fs.readFile('./db/db.json', 'utf-8', (err, data) => {
-        if (err) {
-            console.error(err);
-        } else {
-            const parsedNotes = JSON.parse(data);
-            parsedNotes.push(newNote);
-
-            fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, null, 2))
-        }
+router.get('/notes', (req, res) => {
+  store
+    .getNotes()
+    .then((notes) => {
+      return res.json(notes);
     })
-
-     
-       
-
+    .catch((err) => res.status(500).json(err));
+});
 
 
-}
+router.delete('/notes/:id', (req, res) => {
+  store
+    .removeNote(req.params.id)
+    .then(() => res.json({ ok: true }))
+    .catch((err) => res.status(500).json(err));
+});
 
-// got get, make post and delete if I have//
+router.post('/notes', (req, res) => {
+    store
+      .addNote(req.body)
+      .then((note) => res.json(note))
+      .catch((err) => res.status(500).json(err));
+  });
+  
+
+module.exports = router;
+
