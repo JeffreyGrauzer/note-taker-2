@@ -2,6 +2,7 @@ const util = require("util");
 const fs = require("fs");
 const writeFileAsync = util.promisify(fs.writeFile);
 const readFileAsync = util.promisify(fs.readFile);
+//const { v4, uuidv4 } = require("uuid");
 class Store {
   read() {
     return readFileAsync("db/db.json", "utf8");
@@ -9,7 +10,7 @@ class Store {
   write(note) {
     return writeFileAsync("db/db.json", JSON.stringify(note));
   }
-   getNotes() {
+  getNotes() {
     return this.read().then((notes) => {
       let parsedNotes;
       try {
@@ -17,7 +18,7 @@ class Store {
       } catch (err) {
         parsedNotes = [];
       }
-    return parsedNotes;
+      return parsedNotes;
     });
   }
 
@@ -27,7 +28,7 @@ class Store {
     if (!title || !text) {
       throw new Error("Note 'title' and 'text' cannot be blank");
     }
-    const newNote = { title, text, id: uuidv1() };
+    const newNote = { title, text };
     return this.getNotes()
       .then((notes) => [...notes, newNote])
       .then((updatedNotes) => this.write(updatedNotes))
